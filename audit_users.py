@@ -51,4 +51,12 @@ def is_admin(user):
         #Print error message
         print(f"Error checking admin status for {user}: {e}")
         return False
+#Main function that runs the audit
+def main():
+    #Check if OS = Windows
+
+    if not is_windows():
+        print("This scirpt currently supports Windows only.")
+        return
     
+    print("User Privilege Audit Tool\n")
