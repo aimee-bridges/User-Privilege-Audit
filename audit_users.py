@@ -24,4 +24,18 @@ def get_local_users():
         result = subprocess.run(["net", "user"], capture_output=True, text=True)
         #Split the command output into individual lines
         lines = result.stdout.splitlines()
-        
+        #Initialize an empty list to store usernames
+        users = []
+        #Loop through each line of output
+        for line in lines:
+            #Skip lines that contain slashes or colons (not usernames)
+            if "\\" in line or ":" in line:
+                #Split the line into words and add to user list
+                users.extend(line.strip().split())
+        return users #Return the list of users
+    
+    except Exception as e:
+        #print error message 
+        print(f"Error retrieving users: {e}")
+        return []
+#Function to check if a given user is part of the Admin Group
