@@ -9,6 +9,7 @@ import os                     # For interacting with the operating system
 import subprocess             # To run system commands and capture their output
 import getpass                # To get the current logged-in username
 import platform               # To detect the operating system type
+import win32com.client        # For Windows COM interactions
 
 # Import the privilege descriptions from the external file
 from privileges import PRIVILEGE_DESCRIPTIONS
@@ -47,6 +48,21 @@ def get_local_users():
         # Print an error message if something goes wrong
         print(f"Error retrieving users: {e}")
         return []
+#Function to get last login time for specific user
+def get_last_login(user):
+    try:
+        locator = win32com.client.Dispatch("WbemScripting.SWbemLocator")
+        services = locator.ConnectServer(".", "root\\cimv2")
+        query = f"SELECT * FROM Win32_NetworkLoginProfile WHERE Name = '{user}'"
+        results = services.ExecQuery(query)
+
+        for item in results:
+            if item.LastLogon:
+                # Returns raw timestamp string
+                return item.LastLogon
+        return "Not available"
+    except Exception as e:
+        return f"Error retrieving login time: {e}"
 
 # Function to check if a user is part of the Administrators group
 def is_admin(user):
@@ -103,10 +119,11 @@ def main():
         admin_status = is_admin(user)  # Check if user is an administrator
         label = "Administrator" if admin_status else "Standard User"  # Assign label
         description = PRIVILEGE_DESCRIPTIONS.get(label, "No description available.")  # Get description
-
+        last_login = get_last_login(user)
         # Print the user and their privilege level
         print(f"- {user}: {label}")
         print(f"  Description: {description}\n")
+        print(f"  Last Login: {last_login}\n")
 
 # Run the main function only if the script is executed directly
 if __name__ == "__main__":
