@@ -1,5 +1,8 @@
 #Import required modules
 
+# Import descriptions from external file
+from privileges import PRIVILEGE_DESCRIPTIONS
+
 #Used for interacting with OS
 import os
 
