@@ -42,7 +42,7 @@ def get_local_users():
 def is_admin(user):
     try:
         #Run 'net user <username>' to get detailed info about user
-        result = subprocess.run(["net", "user", user], capture output=True, text=True)
+        result = subprocess.run(["net", "user", user], capture_output=True, text=True)
         #Convert the output to lowercase for easier searching
         output = result.stdout.lower()
         #check if the word 'administrators' appears in output
@@ -60,3 +60,19 @@ def main():
         return
     
     print("User Privilege Audit Tool\n")
+    #get the current logged in user
+    current_user = getpass.getuser()
+    print(f"Current user: {current_user}\n")
+    #Retrieve all local users
+    users = get_local_users()
+    #Loop through each user and check their privilege level
+    for user in users:
+         #Determine if the user is an admin 
+         admin_status = is_admin(user)
+         #Choose a label based on their privilege level
+         status ="Administrator" if admin_status else "Standard User"
+         #Print the result for each user
+         print(f" - {user}: {status}")
+    #Run main function only if script is executed directly
+    if __name__ == "__main__":
+        main()
