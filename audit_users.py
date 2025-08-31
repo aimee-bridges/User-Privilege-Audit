@@ -73,6 +73,6 @@ def main():
          status ="Administrator" if admin_status else "Standard User"
          #Print the result for each user
          print(f" - {user}: {status}")
-    #Run main function only if script is executed directly
-    if __name__ == "__main__":
-        main()
+#Run main function only if script is executed directly
+if __name__ == "__main__":
+     main()
