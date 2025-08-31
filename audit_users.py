@@ -17,3 +17,11 @@ def is_windows():
     #Returns True if OS is Windows
     return platform.system() == "Windows"
 
+#Function to retrieve all local user accounts on the system
+def get_local_users():
+    try:
+        #Run the 'net user' command to list all users
+        result = subprocess.run(["net", "user"], capture_output=True, text=True)
+        #Split the command output into individual lines
+        lines = result.stdout.splitlines()
+        
