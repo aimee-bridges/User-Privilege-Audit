@@ -39,3 +39,16 @@ def get_local_users():
         print(f"Error retrieving users: {e}")
         return []
 #Function to check if a given user is part of the Admin Group
+def is_admin(user):
+    try:
+        #Run 'net user <username>' to get detailed info about user
+        result = subprocess.run(["net", "user", user], capture output=True, text=True)
+        #Convert the output to lowercase for easier searching
+        output = result.stdout.lower()
+        #check if the word 'administrators' appears in output
+        return "administrators" in output
+    except Exception as e:
+        #Print error message
+        print(f"Error checking admin status for {user}: {e}")
+        return False
+    
